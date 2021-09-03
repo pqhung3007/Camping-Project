@@ -4,6 +4,7 @@ const catchAsync = require('../utils/catchAsync')
 const expressError = require('../utils/expressError')
 const Campground = require('../models/campground')
 const { campgroundSchema } = require('../schemas.js')
+const { isLoggedIn } = require('../middleware.js')
 
 //*section 444/445
 const validateCampground = (req, res, next) => {
@@ -22,11 +23,11 @@ router.get('/', async (req, res) => {
 
 })
 //*new must come before id, otherwise the new is treated as id => can't load the page
-router.get('/new', (req, res) => {
+router.get('/new', isLoggedIn, (req, res) => {
     res.render('campgrounds/new')
 })
 
-router.post('/', validateCampground, catchAsync(async (req, res, next) => {
+router.post('/', isLoggedIn, validateCampground, catchAsync(async (req, res, next) => {
     const campground = new Campground(req.body.campground)
     await campground.save()
     req.flash('success', 'Successfully create a new campground')
@@ -45,21 +46,21 @@ router.get('/:id', catchAsync(async (req, res) => {
 }))
 
 //*2 routes: 1 for form, 1 for submitting
-router.get('/:id/edit', catchAsync(async (req, res) => {
+router.get('/:id/edit', isLoggedIn, catchAsync(async (req, res) => {
     const campground = await Campground.findById(req.params.id)
     res.render('campgrounds/edit', { campground })
 }))
 
 //*put must be installed with method-override
 //*update
-router.put('/:id', validateCampground, catchAsync(async (req, res) => {
+router.put('/:id', isLoggedIn, validateCampground, catchAsync(async (req, res) => {
     const { id } = req.params
     const campground = await Campground.findByIdAndUpdate(id, { ...req.body.campground })
     req.flash('success', 'Successfully modify campground')
     res.redirect(`/campgrounds/${campground._id}`)
 }))
 
-router.delete('/:id', catchAsync(async (req, res) => {
+router.delete('/:id', isLoggedIn, catchAsync(async (req, res) => {
     const { id } = req.params
     await Campground.findByIdAndDelete(id)
     req.flash('success', 'Delete campground successfully')
