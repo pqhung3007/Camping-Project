@@ -2,6 +2,11 @@ const express = require('express')
 const router = express.Router()
 const catchAsync = require('../utils/catchAsync')
 const control = require('../controllers/conCamps')
+
+//* handling multipart/form-data, used for uploading files
+const multer = require('multer')
+const upload = multer({ dest: 'uploads/' })
+
 const { isLoggedIn, validateCampground, isAuthor } = require('../middleware.js')
 
 //* group routes together

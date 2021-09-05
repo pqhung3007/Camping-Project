@@ -3,13 +3,13 @@
 const express = require('express')
 const router = express.Router({ mergeParams: true })
 const catchAsync = require('../utils/catchAsync')
-
-const { validateReview } = require('../middleware')
+const Review = require('../models/review')
+const { validateReview, isLoggedIn } = require('../middleware')
 const control = require('../controllers/conReviews')
 
-router.post('/reviews', validateReview, catchAsync(control.createReview))
+router.post('/reviews', isLoggedIn, validateReview, catchAsync(control.createReview))
 
 //*Section 468: pull s
-router.delete('/:reviewId', catchAsync(control.deleteReview))
+router.delete('/:reviewId', isLoggedIn, catchAsync(control.deleteReview))
 
 module.exports = router

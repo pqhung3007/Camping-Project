@@ -1,3 +1,8 @@
+if (process.env.NODE_ENV !== "production") {
+    require('dotenv').config()
+}
+console.log(process.env.SECRET);
+
 const express = require('express')
 const mongoose = require('mongoose')
 const path = require('path')
@@ -70,13 +75,13 @@ app.get('/fakeUser', async (req, res) => {
     res.send(newUser)
 })
 
-app.use('/', userRoutes)
-app.use('/campgrounds', campgroundRoutes)
-app.use('/campgrounds/:id/reviews', reviewRoutes)
-
 app.get('/', (req, res) => {
     res.render('home')
 })
+
+app.use('/', userRoutes)
+app.use('/campgrounds', campgroundRoutes)
+app.use('/campgrounds/:id/reviews', reviewRoutes)
 
 app.all('*', (req, res, next) => {
     next(new expressError('Page Not Found', 404))
