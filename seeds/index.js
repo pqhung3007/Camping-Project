@@ -38,7 +38,13 @@ const seedDB = async () => {
                     cities[random1000].latitude,
                 ]
             },
-            image: 'https://source.unsplash.com/collection/11710960'
+            // image: 'https://source.unsplash.com/collection/11710960'
+            images: [
+                {
+                    url: 'https://res.cloudinary.com/pqh0730/image/upload/v1630892023/YelpCamp/khidclhp2eypobvi3y7g.jpg',
+                    filename: 'YelpCamp/khidclhp2eypobvi3y7g'
+                }
+            ]
         })
         await camp.save();
     }
